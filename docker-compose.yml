@@ -1,0 +1,115 @@
+services:
+
+  toothless-backend:
+    build:
+      context: ./toothless-backend
+      dockerfile: Dockerfile
+    container_name: toothless-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - toothless-backend-postgres
+      - toothless-backend-liquibase
+    env_file:
+      - .env
+    restart: no
+    networks:
+      - app
+
+  toothless-frontend:
+    build:
+      context: ./toothless-frontend
+      dockerfile: Dockerfile
+    container_name: toothless-frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env
+    volumes:
+      - ./toothless-frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host=0.0.0.0
+    depends_on:
+      - toothless-backend
+    networks:
+      - app
+
+  toothless-backend-postgres:
+    image: postgres:16-alpine
+    container_name: toothless-backend-postgres
+    ports:
+      - "5433:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${TOOTHLESS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${TOOTHLESS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${TOOTHLESS_POSTGRES_DB}
+    volumes:
+      - toothless-backend-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${TOOTHLESS_POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app
+
+  toothless-backend-liquibase:
+    image: liquibase/liquibase:4.29
+    container_name: toothless-backend-liquibase
+    user: root
+    depends_on:
+      toothless-backend-postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      LIQUIBASE_CLASSPATH: /liquibase/changelog
+    volumes:
+      - ./toothless-backend/db/changelog:/liquibase/changelog
+    command:
+      [
+        "--url=jdbc:postgresql://toothless-backend-postgres:5432/${TOOTHLESS_POSTGRES_DB}",
+        "--username=${TOOTHLESS_POSTGRES_USER}",
+        "--password=${TOOTHLESS_POSTGRES_PASSWORD}",
+        "--changeLogFile=changelog/db-changelog-master.yml",
+        "update"
+      ]
+    networks:
+      - app
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - .env
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - app
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: [ "redis-server", "--appendonly", "yes" ]
+    restart: unless-stopped
+    networks:
+      - app
+
+volumes:
+  toothless-backend-postgres-data:
+  minio_data:
+  redis-data:
+
+networks:
+  app:

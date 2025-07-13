@@ -1,0 +1,82 @@
+.dentist-container {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.dentist-title {
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 1rem;
+}
+.dentist-block {
+    padding-bottom: 2.8rem;
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 3rem;
+    background-color: var(--white-color);
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+.dentist-block-main-info {
+    padding: 3rem 3rem 1rem 4rem;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    font-size: 28px;
+}
+.dentist-block-main-info-text{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+.dentist-block-main-info-text-label{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.dentist-block-main-info-img{
+    width: 280px;
+    border-radius: 20%;
+}
+.dentist-decoration-line {
+    margin-left: 4rem;
+    border-top: 1px solid var(--light-grey-color)
+}
+.dentist-block-text{
+    padding: 1rem 3rem 1rem 4rem;
+    font-size: 20px;
+    text-align: justify;
+}
+.dentist-block-text-field {
+    display: flex;
+    max-width: 100%;
+    padding: 1rem 3rem 1rem 4rem;
+    background: var(--white-color);
+    border: var(--light-black-color);
+    transition: background-color 0.3s ease;
+}
+.dentist-block-text-field:hover {
+    background: var(--light-grey-color);
+}
+.dentist-block-text-field-label {
+    display: flex;
+    justify-content: flex-start;
+    width: 20%;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.dentist-block-text-field-info {
+    font-size: 1.1rem;
+    text-align: justify;
+    width: 80%;
+}
+.dentist-block-title {
+    font-weight: bold;
+    font-size: 2rem;
+}

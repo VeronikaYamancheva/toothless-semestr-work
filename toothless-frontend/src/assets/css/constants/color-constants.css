@@ -1,0 +1,23 @@
+:root {
+    --dark-primary-color: #148DD9;
+    --primary-color: #63BBF2;
+    --light-primary-color: #6BCCF2;
+    --white-color: #fdfdfd;
+    --light-black-color: #0D0D0D;
+    --background-page-color: #f5f5f5;
+    --background-shadow-color: rgba(0, 0, 0, 0.2);
+    --background-over-shadow-color: rgba(0, 0, 0, 0.5);
+    --error-color: #ff4444;
+    --grey-color: #b5b5b5;
+    --light-grey-color: #dadada;
+    --selection-color: #e6eefc;
+    --toothless-image-background-color: #fdf4e0;
+    --accept-color: #008803;
+    --transparent-button-color: rgba(255, 255, 255, 0.7);
+    --transparent-button-color-hover: rgba(240, 240, 240, 0.95);
+    --timetable-free-cell: #d2f0ff;
+    --timetable-free-cell-hover: #b4e6ff;
+    --timetable-busy-cell: #f8b4aa;
+    --timetable-busy-cell-hover: #ffc8c8;
+    --timetable-weekend-cell: #e0e0e0;
+}

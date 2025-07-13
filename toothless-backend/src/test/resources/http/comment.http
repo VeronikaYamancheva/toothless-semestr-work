@@ -1,0 +1,209 @@
+# COMMENT API
+
+### CLIENT login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "client.sokolov@example.com",
+  "password": "ClientPass123!"
+}
+
+> {%
+    client.test("Login as CLIENT - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("client_auth_token", response.body.accessToken);
+        client.global.set("client_user_id", response.body.userId);
+    });
+%}
+
+### ADMIN login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@dentalclinic.com",
+  "password": "AdminPass123!"
+}
+
+> {%
+    client.test("Login as ADMIN - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("admin_auth_token", response.body.accessToken);
+    });
+%}
+
+### Get latest main page comments (success)
+GET http://localhost:8080/api/v1/comments?blocksCount=5
+Accept: application/json
+
+> {%
+    client.test("Get latest main page comments - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of comments");
+    });
+%}
+
+### Get latest main page comments (invalid)
+GET http://localhost:8080/api/v1/comments?blocksCount=0
+Accept: application/json
+
+> {%
+    client.test("Get latest main page comments - invalid count", function () {
+        client.assert(response.status === 400, "Response status should be 400 for invalid blocks count");
+    });
+%}
+
+### Create new main page comment (success)
+POST http://localhost:8080/api/v1/comments
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{client_auth_token}}
+
+{
+  "content": "Great service! Very professional staff.",
+  "dentistId": null,
+  "parentId": null
+}
+
+> {%
+    client.test("Create new main page comment - success", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body.commentId !== null, "Comment ID should be generated");
+        client.assert(response.body.isSuccess === true, "Creation should be successful");
+        client.global.set("created_comment_id", response.body.commentId);
+    });
+%}
+
+### Create reply comment (success)
+POST http://localhost:8080/api/v1/comments
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{client_auth_token}}
+
+{
+  "content": "I totally agree with you!",
+  "dentistId": null,
+  "parentId": "{{created_comment_id}}"
+}
+
+> {%
+    client.test("Create new reply comment - success", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body.commentId !== null, "Comment ID should be generated");
+        client.global.set("reply_comment_id", response.body.commentId);
+    });
+%}
+
+### Create new dentist comment (success)
+POST http://localhost:8080/api/v1/comments
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{client_auth_token}}
+
+{
+  "content": "Dr. Kozlova is amazing!",
+  "dentistId": "a7b8c9d0-e1f2-3456-789a-bcdef1234567",
+  "parentId": null
+}
+
+> {%
+    client.test("Create new dentist comment - success", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.global.set("dentist_comment_id", response.body.commentId);
+    });
+%}
+
+### Create new comment (unauthorized)
+POST http://localhost:8080/api/v1/comments
+Content-Type: application/json
+Accept: application/json
+
+{
+  "content": "Should fail without token",
+  "dentistId": null,
+  "parentId": null
+}
+
+> {%
+    client.test("Create new comment - unauthorized", function () {
+        client.assert(response.status === 401, "Response status should be 401 without token");
+    });
+%}
+
+### Create new comment (invalid)
+POST http://localhost:8080/api/v1/comments
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{client_auth_token}}
+
+{
+  "content": "",
+  "dentistId": "00000000-0000-0000-0000-000000000000",
+  "parentId": "00000000-0000-0000-0000-000000000000"
+}
+
+> {%
+    client.test("Create new comment - validation error", function () {
+        client.assert(response.status === 400, "Response status should be 400 for validation errors");
+    });
+%}
+
+### Get replies (success)
+GET http://localhost:8080/api/v1/comments/{{created_comment_id}}/replies
+Accept: application/json
+
+> {%
+    client.test("Get comment replies - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of replies");
+        client.assert(response.body.length > 0, "Should have at least one reply");
+    });
+%}
+
+### Get comment replies (not found)
+GET http://localhost:8080/api/v1/comments/00000000-0000-0000-0000-000000000000/replies
+Accept: application/json
+
+> {%
+    client.test("Get comment replies - not found", function () {
+        client.assert(response.status === 200, "Response status is 200 even if no replies");
+        client.assert(Array.isArray(response.body), "Should return empty array");
+    });
+%}
+
+### Get dentist's comments (success)
+GET http://localhost:8080/api/v1/comments/dentist/550e8400-e29b-41d4-a716-446655440000?blocksCount=3
+Accept: application/json
+
+> {%
+    client.test("Get dentist's latest comments - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of comments");
+    });
+%}
+
+### Delete comment (ADMIN)
+DELETE http://localhost:8080/api/v1/comments/{{created_comment_id}}
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+> {%
+    client.test("Delete comment - success (as admin)", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Deletion should be successful");
+    });
+%}
+
+### Delete comment (forbidden)
+DELETE http://localhost:8080/api/v1/comments/{{reply_comment_id}}
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+> {%
+    client.test("Delete comment - forbidden (not owner)", function () {
+        client.assert(response.status === 403, "Response status should be 403 for non-owner");
+    });
+%}

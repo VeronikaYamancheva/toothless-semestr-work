@@ -1,0 +1,64 @@
+@import url(../constants/color-constants.css);
+@import url(../constants/font-constants.css);
+
+.auth-container {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-form-card {
+    margin: 4rem;
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+
+.auth-form-title {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--light-black-color);
+}
+
+.oauth-component {
+    margin: 0 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.oauth-button {
+    display: flex;
+    align-items: center;
+    margin: 0 0.5rem;
+    padding: 0 0.5rem 0 0;
+    background-color: var(--background-page-color);
+    border: none;
+    border-radius: 30px;
+    transition: transform 0.3s ease;
+}
+
+.oauth-button:hover {
+    transform: scale(1.1);
+    text-decoration-line: none;
+}
+
+.oauth-button-img {
+    padding: 0.5rem;
+    width: 30px;
+    height: 30px;
+}
+
+.oauth-button-title {
+    color: var(--light-black-color);
+    padding: 0.2rem;
+}
+

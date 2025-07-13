@@ -1,0 +1,140 @@
+# APPOINTMENT API
+
+### CLIENT login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "client.sokolov@example.com",
+  "password": "ClientPass123!"
+}
+
+> {%
+    client.test("Login as CLIENT - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("client_auth_token", response.body.accessToken);
+        client.global.set("client_user_id", response.body.userId);
+    });
+%}
+
+### DENTIST login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "dentist.kozlova@dentalclinic.com",
+  "password": "DentistPass123!"
+}
+
+> {%
+    client.test("Login as DENTIST - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("dentist_auth_token", response.body.accessToken);
+        client.global.set("dentist_user_id", response.body.userId);
+    });
+%}
+
+### ADMIN login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@dentalclinic.com",
+  "password": "AdminPass123!"
+}
+
+> {%
+    client.test("Login as ADMIN - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("admin_auth_token", response.body.accessToken);
+    });
+%}
+
+### Success create appointment
+POST http://localhost:8080/api/v1/appointments
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{client_auth_token}}
+
+{
+  "dentistId": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+  "beginTime": "10:00:00",
+  "endTime": "11:00:00",
+  "date": "2025-12-31",
+  "procedureId": "d3ddbc99-9c0b-4ef8-bb6d-6bb9bd380a14"
+}
+
+> {%
+    client.test("Create new appointment - success", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body.appointmentId !== null, "Appointment ID should be generated");
+        client.assert(response.body.isSuccess === true, "Creation should be successful");
+        client.global.set("created_appointment_id", response.body.appointmentId);
+    });
+%}
+
+### Validation errors while appointment creation
+POST http://localhost:8080/api/v1/appointments
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{client_auth_token}}
+
+{
+  "dentistId": "d3ddbc99-9c0b-4ef8-bb6d-6bb9bd380a14",
+  "beginTime": "09:00:00",
+  "endTime": "08:00:00",
+  "date": "2020-01-01"
+}
+
+> {%
+    client.test("Create new appointment - validation errors", function () {
+        client.assert(response.status === 400, "Response status should be 400 for validation errors");
+    });
+%}
+
+### Unauthorized appointment creation
+POST http://localhost:8080/api/v1/appointments
+Content-Type: application/json
+Accept: application/json
+
+{
+  "dentistId": "550e8400-e29b-41d4-a716-446655440000",
+  "beginTime": "10:00:00",
+  "endTime": "11:00:00",
+  "date": "2024-12-31"
+}
+
+> {%
+    client.test("Create new appointment - unauthorized", function () {
+        client.assert(response.status === 401, "Response status should be 401 without token");
+    });
+%}
+
+### Getting appointments by date range (by ADMIN)
+GET http://localhost:8080/api/v1/appointments/admin?begin=2024-01-01&end=2024-12-31
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+> {%
+    client.test("Get appointments by date range - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of appointments");
+    });
+%}
+
+### Getting appointment detailed info (by ADMIN)
+GET http://localhost:8080/api/v1/appointments/{{created_appointment_id}}/admin
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+> {%
+    client.test("Get appointment detailed info - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.appointmentId !== null, "Appointment ID should be present");
+        client.assert(response.body.client !== null, "Client info should be present");
+        client.assert(response.body.dentist !== null, "Dentist info should be present");
+    });
+%}

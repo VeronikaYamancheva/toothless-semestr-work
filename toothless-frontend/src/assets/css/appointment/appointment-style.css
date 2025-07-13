@@ -1,0 +1,404 @@
+.appointment-container {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.appointment-block {
+    padding-bottom: 2.8rem;
+    width: 100%;
+    max-width: 1000px;
+}
+.appointment-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.dentist-block-main-info {
+    padding: 3rem 3rem 1rem 4rem;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    font-size: 28px;
+}
+.dentist-block-main-info-text{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+.dentist-block-main-info-text-label{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.dentist-block-main-info-img{
+    width: 240px;
+    border-radius: 20%;
+}
+.dentist-decoration-line {
+    margin-left: 4rem;
+    border-top: 1px solid var(--light-grey-color)
+}
+.stepper {
+    display: flex;
+    margin: 20px 0;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.step {
+    flex: 1;
+    padding: 24px 0;
+    text-align: center;
+    background: var(--primary-color);
+    color: var(--light-black-color);
+    position: relative;
+    font-size: 18px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.step.active {
+    background: var(--dark-primary-color);
+    color: var(--white-color);
+
+}
+
+.step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1rem;
+    width: 1.01rem;
+    height: 100%;
+    background: inherit;
+    border-right: var(--white-color);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    z-index: 3;
+}
+
+.step:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1.1rem;
+    width: 1.1rem;
+    height: 100%;
+    background: var(--white-color);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    z-index: 2;
+    border-radius: 2px;
+}
+
+.step.active:not(:last-child)::after {
+    background: var(--dark-primary-color);
+}
+
+.procedures-container {
+    height: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.procedures-title-h1 {
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 1rem;
+}
+.procedures-title-h2 {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 1rem;
+}
+.procedures-block {
+    padding-bottom: 2.8rem;
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 3rem;
+    background-color: var(--white-color);
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+.procedures-block-item {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    padding: 0.5rem 0 0.5rem 4rem;
+}
+
+.procedures-block-item.selectable {
+    transition: 0.2s background-color ease-in-out;
+}
+.procedures-block-item.selectable:hover {
+    cursor: pointer;
+    background-color: var(--light-grey-color);
+}
+.procedures-block-item-content {
+    display: flex;
+
+}
+.procedures-block-item-labels{
+    font-weight: bold;
+    font-size: 1.3rem;
+    padding: 0.5rem;
+    text-align: center;
+}
+.procedures-decoration-line {
+    margin-left: 4rem;
+    border-top: 1px solid var(--light-grey-color)
+}
+
+.procedure-item-img {
+    width: 64px;
+    border-radius: 50%;
+}
+
+.procedure-item-title {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    text-align: start;
+}
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.pagination-button:disabled {
+    opacity: 0.5;
+    cursor: revert;
+}
+
+.pagination-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--background-over-shadow-color);
+    background: var(--transparent-button-color);
+    box-shadow: 0 0 4px var(--background-shadow-color);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    cursor: pointer;
+    transition:
+            transform 0.3s ease-in-out,
+            background 0.3s ease;
+
+}
+
+.pagination-button:not(:disabled):hover {
+    transform: scale(1.2);
+    background: var(--transparent-button-color-hover);
+}
+
+.pagination-button:hover {
+    text-decoration-line: none;
+}
+
+.pagination-button.left {
+    left: 0;
+    margin-left: 1rem;
+}
+
+.pagination-button.right {
+    right: 0;
+    margin-right: 1rem;
+}
+
+.management-block {
+    display: flex;
+    flex-direction: row;
+}
+
+.management-button {
+    display: flex;
+    flex-direction: row;
+    margin: 0 1rem 0 0;
+}
+
+.management-image {
+    width: 2rem;
+    transition: transform 0.3s ease-in-out;
+}
+
+.management-image:hover {
+    transform: scale(1.2);
+}
+
+.management-add-field {
+    margin-bottom: 0.5rem;
+    max-width: 1000px;
+    width: 100%;
+}
+
+.management-add-item {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.management-date {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 1rem;
+}
+
+.management-date-item {
+    width: 42%;
+}
+
+.management-add-button {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+    text-decoration-line: none;
+    background-color: var(--white-color);
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+
+.management-add-button:hover {
+    transform: scale(1.2);
+    text-decoration-line: none;
+}
+
+.management-add-button-img {
+    width: 1.5rem;
+    margin-right: 0.2rem;
+}
+
+.management-add-button-text {
+    font-size: 0.8rem;
+    color: var(--light-black-color);
+    text-decoration-line: none;
+}
+.management-add-button-text:hover{
+    text-decoration-line: none;
+}
+
+.profile-container {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem 1rem 2rem;
+}
+.profile-layout {
+    padding-bottom: 1rem;
+    width: 100%;
+    max-width: 800px;
+    background: var(--white-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+.profile-block {
+    margin: 1rem 2rem 1rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.profile-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-top: 16px ;
+    margin-bottom: 16px ;
+}
+
+.profile-img {
+    height: 160px;
+    width: 160px;
+    border-radius: 50%;
+}
+
+.profile-field {
+    display:  flex;
+    max-width: 800px;
+    padding: 1rem 0 1rem 2rem;
+    background: var(--white-color);
+    border: var(--light-black-color);
+    transition: background-color 0.3s ease;
+}
+
+.profile-field:hover {
+    background: var(--light-grey-color);
+}
+
+.profile-border-radius {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.profile-decoration-line {
+    margin-left: 2rem;
+    border-top: 1px solid var(--light-grey-color)
+}
+
+.profile-field-label {
+    display: flex;
+    justify-content: flex-start;
+    width: 180px;
+}
+
+.profile-field-info {
+    font-size: 1.1rem;
+}
+
+.profile-field-info-no-data {
+    font-size: 0.8rem;
+    color: var(--grey-color);
+    font-style: italic;
+}
+
+.update-profile-information-button {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 1rem 0 1rem;
+    padding: 0.4rem 0.6rem;
+    background-color: var(--background-page-color);
+    color: var(--light-black-color);
+    border: none;
+    border-radius: 30px;
+    transition:
+            background-color 0.3s ease-in-out,
+            color 0.3s ease-in-out,
+            transform 0.3s ease-in-out;
+}
+
+.update-profile-information-button:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    transform: scale(1.1);
+    text-decoration-line: none;
+}
+
+.update-profile-information-button-label {
+    padding: 0 0.2rem;
+}
+
+.profile-update-field {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.updating-profile-input-field {
+    border: none;
+}
+
+.updating-profile-input-field:focus-visible{
+    border: none;
+}
+
+
+

@@ -1,0 +1,152 @@
+.update-profile-modal-window-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-over-shadow-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;;
+}
+
+.update-profile-modal-window-field {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--white-color);
+    padding: 1.5rem 0;
+    border-radius: 32px;
+    max-width: 800px;
+    min-height: 228px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 25px var(--background-shadow-color);
+}
+
+.update-profile-modal-window-item-right{
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
+    padding-right: 1.5rem;
+}
+
+.update-profile-modal-window-item-center {
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.update-profile-modal-window-close-button {
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 1.7rem;
+    cursor: pointer;
+    color: var(--grey-color);
+    transition: color 0.15s ease-in-out;
+}
+
+.update-profile-modal-window-close-button:hover {
+    color: var(--error-color);
+    text-decoration-line: none;
+}
+
+.update-profile-modal-window-field-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--dark-primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.update-profile-modal-window-field-button {
+    background-color: var(--light-grey-color);
+    color: var(--light-black-color);
+    padding: 0.6rem 1.5rem 0.6rem 1.5rem;
+    border-radius: 20px;
+    transition:
+            background-color 0.3s ease-in-out,
+            color 0.3s ease-in-out,
+            transform 0.3s ease-in-out;
+    font-size: 14px;
+}
+
+.update-profile-modal-window-field-button:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    transform:  scale(1.1);
+    text-decoration-line:  none;
+}
+
+.update-profile-modal-window-text-description {
+    color: var(--grey-color);
+    font-size: 0.8rem;
+    margin: 0.5rem 0 1rem;
+}
+
+ul {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-inline-start: 0;
+}
+
+li {
+    list-style: none;
+}
+
+.update-profile-field {
+    display:  flex;
+    max-width: 800px;
+    padding: 1rem 0 1rem 2rem;
+    background: var(--white-color);
+    border: var(--light-black-color);
+    transition: background-color 0.3s ease;
+}
+
+.update-profile-field-label {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 180px;
+    margin-right: 10px;
+}
+
+.update-profile-field-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 60%;
+    max-width: 100%;
+}
+
+.update-profile-decoration-line-vertical {
+    margin-right: 50px;
+    border-left: 1px solid var(--light-grey-color)
+}
+
+.update-profile-input-field {
+    height: 2rem;
+    width: 100%;
+    max-width: 100%;
+    background-color: var(--white-color);
+    border: 1px solid var(--light-grey-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    padding: 0 0.5rem;
+}
+
+.update-profile-input-field:focus {
+    outline: none;
+    background-color: white;
+    border: var(--primary-color) 1px solid;
+}
+
+.update-profile-error-message {
+    color: var(--error-color);
+    font-size: 0.6rem;
+    margin-top: 0.1rem;
+}
+.update-profile-error-message::selection{
+    color: var(--error-color);
+}

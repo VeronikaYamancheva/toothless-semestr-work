@@ -1,0 +1,202 @@
+.profile-container {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem 1rem 2rem;
+    width: 90%
+}
+.profile-layout {
+    padding-bottom: 1rem;
+    width: 100%;
+    max-width: 800px;
+    background: var(--white-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+.profile-block {
+    margin: 1rem 2rem 1rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.profile-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-top: 16px ;
+    margin-bottom: 16px ;
+}
+
+.profile-img {
+    height: 160px;
+    width: 160px;
+    border-radius: 50%;
+}
+
+.profile-field {
+    display:  flex;
+    max-width: 800px;
+    padding: 1rem 0 1rem 2rem;
+    background: var(--white-color);
+    border: var(--light-black-color);
+    transition: background-color 0.3s ease;
+}
+
+.profile-field:hover {
+    background: var(--light-grey-color);
+}
+
+.profile-border-radius {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.profile-decoration-line {
+    margin-left: 2rem;
+    border-top: 1px solid var(--light-grey-color)
+}
+
+.profile-field-label {
+    display: flex;
+    justify-content: flex-start;
+    width: 180px;
+}
+
+.profile-field-info {
+    font-size: 1.1rem;
+}
+
+.profile-field-info-no-data {
+    font-size: 0.8rem;
+    color: var(--grey-color);
+    font-style: italic;
+}
+
+.update-profile-information-button {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 1rem 0 1rem;
+    padding: 0.4rem 0.6rem;
+    background-color: var(--background-page-color);
+    color: var(--light-black-color);
+    border: none;
+    border-radius: 30px;
+    transition:
+            background-color 0.3s ease-in-out,
+            color 0.3s ease-in-out,
+            transform 0.3s ease-in-out;
+}
+
+.update-profile-information-button:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    transform: scale(1.1);
+    text-decoration-line: none;
+}
+
+.update-profile-information-button-label {
+    padding: 0 0.2rem;
+}
+
+.profile-update-field {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.updating-profile-input-field {
+    border: none;
+}
+
+.updating-profile-input-field:focus-visible{
+    border: none;
+}
+
+.profile-view {
+    height: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+}
+
+.procedures-block {
+    padding-bottom: 2.8rem;
+    width: 90%;
+    border-radius: 3rem;
+    background-color: var(--white-color);
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+
+.profile-page-title-2 {
+    display: flex;
+    font-weight: bold;
+    font-size: 2.5rem;
+    margin: 0.5rem 0;
+    justify-content: center;
+}
+
+.profile-add-field {
+    margin-bottom: 0.2rem;
+    max-width: 800px;
+    width: 100%;
+}
+
+.profile-add-item {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.profile-add-button {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+    text-decoration-line: none;
+    background-color: var(--white-color);
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+.file-upload-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease-in-out;
+    text-decoration-line: none;
+    background-color: var(--white-color);
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--light-grey-color); /* или другой подходящий цвет */
+}
+
+.file-upload-button:hover {
+    transform: scale(1.02);
+}
+
+.profile-add-button:hover {
+    transform: scale(1.2);
+    text-decoration-line: none;
+}
+
+.profile-add-button-img {
+    width: 1.5rem;
+    margin-right: 0.2rem;
+}
+
+.profile-add-button-text {
+    font-size: 0.8rem;
+    color: var(--light-black-color);
+    text-decoration-line: none;
+}
+.profile-add-button-text:hover{
+    text-decoration-line: none;
+}
+
+

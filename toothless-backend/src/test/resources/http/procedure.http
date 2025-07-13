@@ -1,0 +1,232 @@
+# PROCEDURE API
+
+### ADMIN login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@dentalclinic.com",
+  "password": "AdminPass123!"
+}
+
+> {%
+    client.test("Login as ADMIN - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("admin_auth_token", response.body.accessToken);
+    });
+%}
+
+### CLIENT login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "client.sokolov@example.com",
+  "password": "ClientPass123!"
+}
+
+> {%
+    client.test("Login as CLIENT - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("client_auth_token", response.body.accessToken);
+    });
+%}
+
+### Get all procedures (page)
+GET http://localhost:8080/api/v1/procedures?page=0&size=10
+Accept: application/json
+
+> {%
+    client.test("Get all procedures - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.content !== null, "Should return list of procedures");
+    });
+%}
+
+### Get procedure by ID
+GET http://localhost:8080/api/v1/procedures/f1ffbc99-9c0b-4ef8-bb6d-6bb9bd380a22
+Accept: application/json
+
+> {%
+    client.test("Get procedure by ID - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.procedureId !== null, "Procedure ID should be present");
+        client.assert(response.body.name !== null, "Procedure name should be present");
+        client.assert(response.body.cost >= 0, "Cost should be positive");
+    });
+%}
+
+### Get procedure by ID (not found)
+GET http://localhost:8080/api/v1/procedures/00000000-0000-0000-0000-000000000011
+Accept: application/json
+
+> {%
+    client.test("Get procedure by ID - not found", function() {
+        client.assert(response.status === 404, "Response status should be 404 for non-existent procedure");
+    });
+%}
+
+### Get procedures demo for main page
+GET http://localhost:8080/api/v1/procedures/demo
+Accept: application/json
+
+> {%
+    client.test("Get procedures demo - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of procedures");
+        client.assert(response.body.length > 0, "Should return at least one procedure");
+    });
+%}
+
+### Create procedure (ADMIN)
+POST http://localhost:8080/api/v1/procedures
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+{
+  "name": "Teeth Whitening",
+  "description": "Professional teeth whitening procedure using advanced technology",
+  "cost": 5000,
+  "specializationId": "ee55bc99-9c0b-4ef8-bb6d-6bb9bd380a15"
+}
+
+> {%
+    client.test("Create procedure - success", function() {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body.procedureId !== null, "Procedure ID should be generated");
+        client.assert(response.body.isSuccess === true, "Creation should be successful");
+        client.global.set("created_procedure_id", response.body.procedureId);
+    });
+%}
+
+### Create procedure (invalid)
+POST http://localhost:8080/api/v1/procedures
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+{
+  "name": "T",
+  "description": "Short",
+  "cost": -100,
+  "specializationId": "1c84f167-9a41-411f-97e8-ba1d1c71504c"
+}
+
+> {%
+    client.test("Create procedure - validation errors", function() {
+        client.assert(response.status === 400, "Response status should be 400 for validation errors");
+    });
+%}
+
+### Create procedure (unauthorized)
+POST http://localhost:8080/api/v1/procedures
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Unauthorized Creation",
+  "description": "Should fail without token",
+  "cost": 1000,
+  "specializationId": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+> {%
+    client.test("Create procedure - unauthorized", function() {
+        client.assert(response.status === 401, "Response status should be 401 without token");
+    });
+%}
+
+### Create procedure (forbidden)
+POST http://localhost:8080/api/v1/procedures
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{client_auth_token}}
+
+{
+  "name": "Forbidden Creation",
+  "description": "Should fail for CLIENT role",
+  "cost": 1000,
+  "specializationId": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+> {%
+    client.test("Create procedure - forbidden", function() {
+        client.assert(response.status === 403, "Response status should be 403 for CLIENT role");
+    });
+%}
+
+### Update procedure (success)
+PATCH http://localhost:8080/api/v1/procedures/{{created_procedure_id}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+{
+  "name": "Updated Teeth Whitening",
+  "description": "Updated description with new technology",
+  "cost": 4500,
+  "specializationId": "aa77bc99-9c0b-4ef8-bb6d-6bb9bd380a17"
+}
+
+> {%
+    client.test("Update procedure - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Update should be successful");
+    });
+%}
+
+### Update procedure (not found)
+PATCH http://localhost:8080/api/v1/procedures/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+{
+  "name": "Non-existent Procedure",
+  "description": "Should not be found",
+  "cost": 1000,
+  "specializationId": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+> {%
+    client.test("Update procedure - not found", function() {
+        client.assert(response.status === 400, "Response status should be 400 for non-existent procedure");
+    });
+%}
+
+### Delete procedure
+DELETE http://localhost:8080/api/v1/procedures/{{created_procedure_id}}
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+> {%
+    client.test("Delete procedure - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Deletion should be successful");
+    });
+%}
+
+### Delete procedure (not found)
+DELETE http://localhost:8080/api/v1/procedures/00000000-0000-0000-0000-000000000000
+Accept: application/json
+Authorization: Bearer {{admin_auth_token}}
+
+> {%
+    client.test("Delete procedure - not found", function() {
+        client.assert(response.status === 400, "Response status should be 400 for non-existent procedure");
+    });
+%}
+
+### Delete procedure (forbidden)
+DELETE http://localhost:8080/api/v1/procedures/{{created_procedure_id}}
+Accept: application/json
+Authorization: Bearer {{client_auth_token}}
+
+> {%
+    client.test("Delete procedure - forbidden", function() {
+        client.assert(response.status === 403, "Response status should be 403 for CLIENT role");
+    });
+%}

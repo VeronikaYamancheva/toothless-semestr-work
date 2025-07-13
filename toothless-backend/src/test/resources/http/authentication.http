@@ -1,0 +1,236 @@
+### Check email availability (true)
+GET http://localhost:8080/api/v1/auth/email_check?email=newuser@example.com
+Accept: application/json
+
+> {%
+    client.test("Email available check - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isAvailable === true, "Email should be available");
+    });
+%}
+
+### Check email availability (invalid)
+GET http://localhost:8080/api/v1/auth/email_check?email=invalid-email
+Accept: application/json
+
+> {%
+    client.test("Email available check - invalid format", function () {
+        client.assert(response.status === 400, "Response status should be 400 for invalid email");
+    });
+%}
+
+### Successfull Register client
+POST http://localhost:8080/api/v1/auth/register/client
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "middleName": "Smith",
+  "birthDate": "1990-01-01",
+  "email": "john.doe@example.com",
+  "phoneNumber": "+7 (123) 456-78-90",
+  "password": "SecurePass123!",
+  "confirmPassword": "SecurePass123!"
+}
+> {%
+    client.global.set("email_cookie", response.headers.valuesOf("Set-Cookie")[0]);
+    client.test("Client registration - success", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body.isSuccess === true, "Registration should be successful");
+        client.assert(response.body.userId !== null, "UserId should be present");
+    });
+%}
+
+### Register client (validation errors)
+POST http://localhost:8080/api/v1/auth/register/client
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "J",
+  "lastName": "D",
+  "birthDate": "2050-01-01",
+  "email": "invalid-email",
+  "phoneNumber": "123456",
+  "password": "weak",
+  "confirmPassword": "mismatch"
+}
+
+> {%
+    client.test("Client registration - validation errors", function () {
+        client.assert(response.status === 400, "Response status should be 400 for validation errors");
+    });
+%}
+
+### Successfull register dentist
+POST http://localhost:8080/api/v1/auth/register/dentist
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "Alice",
+  "lastName": "Smith",
+  "middleName": "Jane",
+  "birthDate": "1985-05-15",
+  "email": "alice.smith@example.com",
+  "phoneNumber": "+7 (987) 654-32-10",
+  "password": "DentistPass123!",
+  "confirmPassword": "DentistPass123!",
+  "accessCode": "123456"
+}
+
+> {%
+    client.test("Dentist registration - success", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body.isSuccess === true, "Registration should be successful");
+        client.assert(response.body.userId !== null, "UserId should be present");
+    });
+%}
+
+### Register dentist (invalid access code)
+POST http://localhost:8080/api/v1/auth/register/dentist
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "Bob",
+  "lastName": "Johnson",
+  "birthDate": "1990-01-01",
+  "email": "bob.johnson@example.com",
+  "phoneNumber": "+7 (111) 222-33-44",
+  "password": "DentistPass123!",
+  "confirmPassword": "DentistPass123!",
+  "accessCode": "invalid"
+}
+
+> {%
+    client.test("Dentist registration - invalid access code", function () {
+        client.assert(response.status === 400, "Response status should be 400 for invalid access code");
+    });
+%}
+
+### Verify user (success)
+POST http://localhost:8080/api/v1/auth/verify?code=386218
+Content-Type: application/json
+Accept: application/json
+Cookie: {{email_cookie}}
+
+> {%
+    client.test("User verification - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Verification should be successful");
+    });
+%}
+
+### Verify user (invalid code)
+POST http://localhost:8080/api/v1/auth/verify?code=wrong-code
+Content-Type: application/json
+Accept: application/json
+Cookie: {{email_cookie}}
+
+> {%
+    client.test("User verification - invalid code", function () {
+        client.assert(response.status === 400, "Response status should be 400 for invalid code");
+    });
+%}
+
+### Login (success)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "SecurePass123!"
+}
+
+> {%
+    client.global.set("auth_token", response.body.accessToken);
+    client.test("Login - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+    });
+%}
+
+### Login (invalid credentials)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "wrong-password"
+}
+
+> {%
+    client.test("Login - invalid credentials", function () {
+        client.assert(response.status === 401, "Response status should be 401 for invalid credentials");
+    });
+%}
+
+### Login (unverified)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "unverified@example.com",
+  "password": "Password123!"
+}
+
+> {%
+    client.test("Login - unverified account", function () {
+        client.assert(response.status === 403, "Response status should be 403 for unverified account");
+    });
+%}
+
+### Refresh token (success)
+POST http://localhost:8080/api/v1/auth/refresh
+Content-Type: application/json
+Accept: application/json
+Cookie: refresh_token=valid-refresh-token
+
+> {%
+    client.test("Refresh token - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "New access token should be present");
+    });
+%}
+
+### Refresh token (invalid)
+POST http://localhost:8080/api/v1/auth/refresh
+Content-Type: application/json
+Accept: application/json
+Cookie: refresh_token=invalid-token
+
+> {%
+    client.test("Refresh token - invalid token", function () {
+        client.assert(response.status === 401, "Response status should be 401 for invalid token");
+    });
+%}
+
+### Logout (success)
+POST http://localhost:8080/api/v1/auth/logout
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+> {%
+    client.test("Logout - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Logout should be successful");
+    });
+%}
+
+### Logout (unauthorized)
+POST http://localhost:8080/api/v1/auth/logout
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test("Logout - unauthorized", function () {
+        client.assert(response.status === 401, "Response status should be 401 without token");
+    });
+%}

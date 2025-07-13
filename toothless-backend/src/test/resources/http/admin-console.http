@@ -1,0 +1,154 @@
+# ADMIN CONSOLE API
+
+### ADMIN login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@dentalclinic.com",
+  "password": "AdminPass123!"
+}
+
+> {%
+    client.test("Login as ADMIN - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("admin_token", response.body.accessToken);
+    });
+%}
+
+### MASTER login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "master@dentalclinic.com",
+  "password": "MasterPass123!"
+}
+
+> {%
+    client.test("Login as MASTER - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("master_token", response.body.accessToken);
+    });
+%}
+
+### Getting a list of all users for MASTER (with information about the admin role)
+GET http://localhost:8080/api/v1/admin/users?page=0&size=10
+Accept: application/json
+Authorization: Bearer {{master_token}}
+
+> {%
+    client.test("Get all users as MASTER - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.content.length > 0, "Should return list of users");
+        client.assert(response.body.content[0].isAdmin !== null, "MASTER should see admin status");
+    });
+%}
+
+### Getting a list of all users for ADMIN
+GET http://localhost:8080/api/v1/admin/users?page=0&size=10
+Accept: application/json
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("Get all users as ADMIN - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.content.length > 0, "Should return list of users");
+        client.assert(response.body.content[0].isAdmin === null, "ADMIN should NOT see admin status");
+    });
+%}
+
+### Unauthorizeg getting all users
+GET http://localhost:8080/api/v1/admin/users
+Accept: application/json
+
+> {%
+    client.test("Get all users - unauthorized", function () {
+        client.assert(response.status === 401, "Response status should be 401 without token");
+    });
+%}
+
+### Assign an ADMIN role (with MASTER token)
+PATCH http://localhost:8080/api/v1/admin/users/66666666-6666-6666-6666-666666666666/admin?isAdmin=true
+Accept: application/json
+Authorization: Bearer {{master_token}}
+
+> {%
+    client.test("Grant ADMIN role - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Operation should be successful");
+    });
+%}
+
+### 5. Assign an ADMIN role (with ADMIN token)
+PATCH http://localhost:8080/api/v1/admin/users/66666666-6666-6666-6666-666666666666/admin?isAdmin=true
+Accept: application/json
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("Grant ADMIN role - forbidden for ADMIN", function () {
+        client.assert(response.status === 403, "Response status should be 403 for non-MASTER");
+    });
+%}
+
+### Assigh BANNED State
+PATCH http://localhost:8080/api/v1/admin/users/66666666-6666-6666-6666-666666666666/ban?isBanned=true
+Accept: application/json
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("Ban user - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Operation should be successful");
+    });
+%}
+
+### Getting all non approved dentists
+GET http://localhost:8080/api/v1/admin/dentist
+Accept: application/json
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("Get unapproved dentists - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of dentists");
+    });
+%}
+
+### 8. Approve dentist
+POST http://localhost:8080/api/v1/admin/dentist/550e8400-e29b-41d4-a716-446655440000?isApproved=true
+Accept: application/json
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("Approve dentist - success", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body.isSuccess === true, "Operation should be successful");
+    });
+%}
+
+### Reject a dentist's application
+POST http://localhost:8080/api/v1/admin/dentist/550e8400-e29b-41d4-a716-446655440000?isApproved=false
+Accept: application/json
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("Reject dentist - success", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body.isSuccess === true, "Operation should be successful");
+    });
+%}
+
+### Set user state from BANNED to ACTIVE
+PATCH http://localhost:8080/api/v1/admin/users/66666666-6666-6666-6666-666666666666/ban?isBanned=false
+Accept: application/json
+Authorization: Bearer {{master_token}}
+
+> {%
+    client.test("Unban user - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Operation should be successful");
+    });
+%}

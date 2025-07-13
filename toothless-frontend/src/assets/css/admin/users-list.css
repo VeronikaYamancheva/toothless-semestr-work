@@ -1,0 +1,116 @@
+.users-list-view {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem 1rem 2rem;
+}
+
+.users-list-title {
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 1rem;
+}
+
+.users-list-layout {
+    margin: 1rem;
+    padding-bottom: 1rem;
+    width: auto;
+    background: var(--white-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--background-shadow-color);
+}
+
+.users-list-item-labels {
+    padding: 1rem 0;
+    font-weight: bold;
+    font-size: 1.3rem;
+    text-align: justify;
+}
+
+.users-list-item {
+    display:  flex;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    align-items: center;
+}
+
+.users-list-item-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.users-list-item-content {
+    min-width: 180px;
+    max-width: 180px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+
+.users-list-item-text {
+    padding: 1rem 0;
+    font-size: 1.1rem;
+}
+
+.users-list-decoration-line {
+    margin-left: 2rem;
+    border-top: 1px solid var(--light-grey-color)
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 25px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--light-grey-color);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--white-color);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--dark-primary-color);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(19px);
+    -ms-transform: translateX(19px);
+    transform: translateX(19px);
+}
+
+.slider.round {
+    border-radius: 25px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}

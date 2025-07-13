@@ -1,0 +1,262 @@
+# PROFILE API
+
+### CLIENT login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "client.sokolov@example.com",
+  "password": "ClientPass123!"
+}
+
+> {%
+    client.test("Login as CLIENT - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("auth_token", response.body.accessToken);
+    });
+%}
+
+### DENTIST login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "dentist.kozlova@dentalclinic.com",
+  "password": "DentistPass123!"
+}
+
+> {%
+    client.test("Login as DENTIST - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("dentist_auth_token", response.body.accessToken);
+    });
+%}
+
+### ADMIN login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@dentalclinic.com",
+  "password": "AdminPass123!"
+}
+
+> {%
+    client.test("Login as ADMIN - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("admin_auth_token", response.body.accessToken);
+    });
+%}
+
+### Get profile (client)
+GET http://localhost:8080/api/v1/profile
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+> {%
+    client.test("Get client profile - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.profileType === "CLIENT", "Should be client profile");
+        client.assert(response.body.firstName !== null, "First name should be present");
+        client.assert(response.body.lastName !== null, "Last name should be present");
+        client.assert(response.body.email !== null, "Email should be present");
+    });
+%}
+
+### Get profile (dentist)
+GET http://localhost:8080/api/v1/profile
+Accept: application/json
+Authorization: Bearer {{dentist_auth_token}}
+
+> {%
+    client.test("Get dentist profile - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.profileType === "DENTIST", "Should be dentist profile");
+        client.assert(response.body.specialization !== null, "Specialization should be present");
+    });
+%}
+
+### Get profile (unauthorized)
+GET http://localhost:8080/api/v1/profile
+Accept: application/json
+
+> {%
+    client.test("Get profile - unauthorized", function () {
+        client.assert(response.status === 401, "Response status should be 401 without token");
+    });
+%}
+
+### Update base profile info
+PUT http://localhost:8080/api/v1/profile/base
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "middleName": "Michael",
+  "birthDate": "1990-01-01",
+  "phoneNumber": "+7 (123) 456-78-90"
+}
+
+> {%
+    client.test("Update base profile - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Update should be successful");
+    });
+%}
+
+### Update base profile info (invalid)
+PUT http://localhost:8080/api/v1/profile/base
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "firstName": "J",
+  "lastName": "D",
+  "birthDate": "2050-01-01",
+  "phoneNumber": "invalid"
+}
+
+> {%
+    client.test("Update base profile - validation errors", function () {
+        client.assert(response.status === 400, "Response status should be 400 for validation errors");
+    });
+%}
+
+### Update dentist profile
+PUT http://localhost:8080/api/v1/profile/dentist
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{dentist_auth_token}}
+
+{
+  "specializationId": "cc99bc99-9c0b-4ef8-bb6d-6bb9bd380a19",
+  "experience": 5,
+  "education": "Moscow State Medical University",
+  "about": "Specializes in pediatric dentistry"
+}
+
+> {%
+    client.test("Update dentist profile - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Update should be successful");
+    });
+%}
+
+### Update dentist profile (forbidden)
+PUT http://localhost:8080/api/v1/profile/dentist
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "specializationId": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+> {%
+    client.test("Update dentist profile - not a dentist", function () {
+        client.assert(response.status === 403, "Response status should be 403 for non-dentist");
+    });
+%}
+
+### Update client profile
+PUT http://localhost:8080/api/v1/profile/client
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "passportFullNumber": "4510 123456",
+  "passportIssuedBy": "ОУФМС России по г. Москве",
+  "passportIssueDate": "15.05.2015",
+  "passportDivisionCode": "770-123",
+  "policyNumber": "1234567890123456",
+  "snils": "123-456-789 01"
+}
+
+> {%
+    client.test("Update client profile - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Update should be successful");
+    });
+%}
+
+### Update client profile (forbidden)
+PUT http://localhost:8080/api/v1/profile/client
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{dentist_auth_token}}
+
+{
+  "passportFullNumber": "4510 123456"
+}
+
+> {%
+    client.test("Update client profile - not a client", function () {
+        client.assert(response.status === 403, "Response status should be 403 for non-client");
+    });
+%}
+
+### Update password
+PATCH http://localhost:8080/api/v1/profile/password
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "oldPassword": "SecurePass123!",
+  "newPassword": "NewSecurePass123!",
+  "newConfirmPassword": "NewSecurePass123!"
+}
+
+> {%
+    client.test("Update password - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Password update should be successful");
+
+        // Обновляем токен после смены пароля
+        client.global.set("auth_token", null);
+    });
+%}
+
+### Update password (invalid)
+PATCH http://localhost:8080/api/v1/profile/password
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "oldPassword": "wrong-password",
+  "newPassword": "NewSecurePass123!",
+  "newConfirmPassword": "NewSecurePass123!"
+}
+
+> {%
+    client.test("Update password - invalid old password", function () {
+        client.assert(response.status === 400, "Response status should be 400 for wrong old password");
+    });
+%}
+
+### Update password (invalid)
+PATCH http://localhost:8080/api/v1/profile/password
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "oldPassword": "SecurePass123!",
+  "newPassword": "short",
+  "newConfirmPassword": "mismatch"
+}
+
+> {%
+    client.test("Update password - validation errors", function () {
+        client.assert(response.status === 400, "Response status should be 400 for validation errors");
+    });
+%}

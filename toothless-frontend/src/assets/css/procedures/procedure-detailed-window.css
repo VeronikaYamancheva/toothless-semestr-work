@@ -1,0 +1,277 @@
+.procedure-modal-window-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-over-shadow-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;;
+}
+
+.procedure-modal-window-field {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--white-color);
+    padding: 1.5rem 0;
+    border-radius: 32px;
+    min-height: 228px;
+    width: 90%;
+    box-shadow: 0 10px 25px var(--background-shadow-color);
+}
+
+.procedure-modal-window-field.small {
+    max-width: 500px;
+}
+
+.procedure-modal-window-field.large {
+    max-width: 540px;
+}
+
+.procedure-modal-window-item-right{
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
+    padding-right: 1.5rem;
+}
+
+.procedure-modal-window-item-left{
+    align-content: flex-start;
+    padding: 0 2rem;
+}
+
+.procedure-modal-window-item-center {
+    display: flex;
+    justify-content: space-around;
+}
+.procedure-modal-window-img {
+    width: 60%
+}
+
+.procedure-modal-window-close-button {
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 1.7rem;
+    cursor: pointer;
+    color: var(--grey-color);
+    transition: color 0.15s ease-in-out;
+}
+
+.procedure-modal-window-close-button:hover {
+    color: var(--error-color);
+    text-decoration-line: none;
+}
+
+.procedure-modal-window-field-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--dark-primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.procedure-modal-field-label {
+    font-weight: bold;
+}
+
+.procedure-modal-field-text {
+    text-align: justify;
+}
+
+.procedure-modal-window-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.procedure-modal-window-field-button {
+    background-color: var(--light-grey-color);
+    color: var(--light-black-color);
+    padding: 0.6rem 1.5rem 0.6rem 1.5rem;
+    border-radius: 20px;
+    transition:
+            background-color 0.3s ease-in-out,
+            color 0.3s ease-in-out,
+            transform 0.3s ease-in-out;
+    font-size: 14px;
+    margin-top: 0.5rem;
+}
+
+.procedure-modal-window-field-button:not(:disabled):hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    transform:  scale(1.1);
+    text-decoration-line:  none;
+}
+
+.procedure-modal-window-field-button:disabled {
+    background-color: var(--light-grey-color);
+    text-decoration-line:  none;
+    cursor: inherit;
+}
+
+.procedure-modal-textarea {
+    font-family: var(--standart-font-family);
+    width: 100%;
+    min-height: 40px;
+    height: auto;
+    padding: 0.5rem;
+    border: 1px solid var(--light-grey-color);
+    border-radius: 0.5rem;
+    resize: none;
+    font-size: 1rem;
+    text-align: justify;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.procedure-modal-textarea:focus {
+    outline: none;
+}
+
+.procedure-modal-textarea::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.procedure-modal-textarea::-webkit-scrollbar-track {
+    background: var(--white-color);
+    border-radius: 0.25rem;
+}
+
+.procedure-modal-textarea::-webkit-scrollbar-thumb {
+    background: var(--light-grey-color);
+    border-radius: 0.25rem;
+}
+
+.procedure-modal-textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--grey-color);
+}
+
+.procedure-modal-textarea {
+    scrollbar-width: thin;
+    scrollbar-color: var(--light-grey-color) var(--white-color);
+}
+
+select {
+    padding: 3rem;
+    border: 0.25rem solid var(--light-grey-color);
+    border-radius: 0.25rem;
+    background-color: white;
+    color: var(--grey-color);
+    cursor: pointer;
+}
+
+.update-procedure-field {
+    display:  flex;
+    max-width: 800px;
+    padding: 1rem 0 1rem 2rem;
+    background: var(--white-color);
+    border: var(--light-black-color);
+    transition: background-color 0.3s ease;
+}
+
+.update-procedure-field-label {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 180px;
+    margin-right: 10px;
+}
+
+.update-procedure-field-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 60%;
+    max-width: 100%;
+    margin-right: 2rem;
+}
+
+.update-procedure-decoration-line-vertical {
+    margin-right: 50px;
+    border-left: 1px solid var(--light-grey-color)
+}
+
+.update-procedure-input-field {
+    height: 2rem;
+    width: 100%;
+    max-width: 100%;
+    background-color: var(--white-color);
+    border: 1px solid var(--light-grey-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    padding: 0 0.5rem;
+}
+
+.update-procedure-input-field:focus {
+    outline: none;
+    background-color: white;
+    border: var(--primary-color) 1px solid;
+}
+
+.update-procedure-error-message {
+    color: var(--error-color);
+    font-size: 0.6rem;
+    margin-top: 0.1rem;
+}
+.update-procedure-error-message::selection{
+    color: var(--error-color);
+}
+
+.custom-select {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--light-grey-color);
+    border-radius: 0.25rem;
+    background-color: var(--white-color);
+    z-index: 1000;
+    margin-top: 0.5rem;
+    scrollbar-width: thin;
+}
+
+.options::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.options::-webkit-scrollbar-track {
+    background: var(--white-color);
+    border-radius: 0.25rem;
+}
+
+.options::-webkit-scrollbar-thumb {
+    background: var(--light-grey-color);
+    border-radius: 0.25rem;
+}
+
+.pad-top {
+    padding-top: 0.2rem;
+}
+
+.options::-webkit-scrollbar-thumb:hover {
+    background: var(--grey-color);
+}
+
+.options div {
+    padding: 0.5rem 1rem;
+    transition: background-color 0.1s;
+}
+
+.options div:hover, .hover-specialization {
+    background-color: var(--dark-primary-color);
+    color: var(--white-color);
+}

@@ -1,0 +1,149 @@
+server:
+  port: 8080
+
+spring:
+
+  application:
+    name: toothless-backend
+
+  datasource:
+    url: ${TOOTHLESS_POSTGRES_URL}
+    username: ${TOOTHLESS_POSTGRES_USER}
+    password: ${TOOTHLESS_POSTGRES_PASSWORD}
+
+  liquibase:
+    enabled: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            scope: user:email
+            redirect-uri: http://localhost:8080/login/oauth2/code/github
+            client-name: GitHub
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - profile
+              - email
+              - https://www.googleapis.com/auth/user.birthday.read
+              - https://www.googleapis.com/auth/user.phonenumbers.read
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            client-name: Google
+            authorization-grant-type: authorization_code
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize?prompt=login
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://www.googleapis.com/oauth2/v4/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_SENDER_USERNAME}
+    password: ${MAIL_SENDER_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+app:
+  frontend-url: http://localhost:5173
+  dentists-demo-count: 9
+  procedures-demo-count: 9
+  comments-demo-count: 7
+  work-day-begin-time: "09:00:00"
+  work-day-end-time: "18:00:00"
+  lunch-begin-time: "13:00:00"
+  lunch-end-time: "14:00:00"
+  timetable-visibility: 14d
+  appointment-duration: 1h
+  company-name: Toothless
+
+auth:
+  access-token-expiration: 10m
+  refresh-token-expiration: 1d
+  private-key: ${JWT_PRIVATE_KEY}
+  public-key: ${JWT_PUBLIC_KEY}
+  dentist-access-code: ${DENTIST_ACCESS_CODE}
+  refresh-token-cookie-key: refresh_token
+  email-cookie-key: email
+  email-verification-code-length: 6
+  email-verification-code-expiration: 1d
+  jwt-subject-key: email
+  jwt-name-key: name
+  jwt-roles-key: roles
+  jwt-user-id-key: userId
+
+
+logging:
+  enabled: true
+  debug: true
+
+encryption:
+  private-key: ${ENCRYPTION_PRIVATE_KEY}
+  public-key: ${ENCRYPTION_PUBLIC_KEY}
+
+calendarific:
+  api-key: ${CALENDARIFIC_API_KEY}
+
+mail:
+  verification-code-subject: Email verification code
+  verification-code-text: Hi! Your code for email verification is
+  sender-username: ${MAIL_SENDER_USERNAME}
+
+minio:
+  url: http://minio:9000
+  access-key: ${MINIO_ROOT_USER}
+  secret-key: ${MINIO_ROOT_PASSWORD}
+  avatars-bucket-name: avatars
+
+exception:
+  noRequiredRole: Access denied. Your current role does not permit this action. Please contact administration if this is unexpected.
+  userDataNotFound: User information could not be retrieved. Please ensure you are logged in or try again later.
+  procedureNotFound: Dental procedure not found. Please ensure the procedure ID is correct or choose from the available list.
+  incorrectTimeSlot: The selected time is invalid. Our clinic accepts appointments between 9:00 AM and 8:00 PM.
+  appointmentHasAlreadyBooked: This time slot is no longer available. Please select another available time for your appointment.
+  clientAlreadyHasAppointment: You already have an upcoming appointment. Only one active booking is allowed per client.
+  pastDate: You cannot select a past date for your appointment. Please choose today or a future date.
+  pastTime: This time has already passed. Please choose a valid future time slot.
+  lunchTime: The clinic is closed for lunch from 1:00 PM to 2:00 PM. Please choose a different time.
+  dentistNotFound: The selected dentist could not be found. Please check the ID or choose another specialist.
+  appointmentNotFound: Appointment not found. It may have been canceled or does not exist.
+  emailAlreadyExists: This email address is already registered. Try logging in or use another email.
+  emailCodeExpired: Your verification code has expired. Please request a new code.
+  emailCodeInvalid: The code you entered is invalid. Please check your email and try again.
+  emailAlreadyVerified: Your email has already been verified. You can proceed to log in.
+  incorrectLoginCredentials: Email or password is incorrect. Please try again or use "Forgot password".
+  refreshTokenInvalid: Your session has expired or is invalid. Please log in again.
+  accountNotVerified: Your account has not been verified. Check your email inbox for the confirmation link.
+  accountBanned: Your account has been suspended. Please contact support for assistance.
+  passwordsDoNotMatch: The passwords entered do not match. Please re-enter and confirm.
+  clientNotFound: Client data not found. Please try again or contact support if the issue persists.
+  failedUploadAvatar: We couldn't upload your avatar. Please try again or contact support.
+  failedGetAvatar: Unable to retrieve your avatar image. Please try again later.
+  avatarNotFound: Avatar not found. Please upload a profile picture to continue.
+  specializationNotFound: Specialization not found. Please check the selection or try again.
+  dentistCodeIncorrect: The access code for dentist registration is incorrect. Please check and try again.
+  unauthorized: You are not logged in. Please log in to access this feature.
+  forbidden: You do not have permission to access this resource.
+  invalidInputs: One or more fields contain invalid data. Please check and correct the form.
+  internalError: An unexpected error occurred. Please try again later or contact support.
+  invalidJwt: Invalid or expired authentication token. Please log in again to continue.

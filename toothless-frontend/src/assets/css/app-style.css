@@ -1,0 +1,23 @@
+body{
+    margin: 0;
+    font-family: var(--standart-font-family), serif;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    max-width: 100%;
+    width: 100%;
+    min-height: 100vh;
+    flex: 1;
+    background-color: var(--background-page-color);
+}
+
+::selection {
+    background: var(--selection-color);
+    color: var(--light-black-color);
+}

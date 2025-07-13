@@ -1,0 +1,76 @@
+@import url(color-constants.css);
+
+.footer {
+    background-color: var(--light-black-color);
+    padding: 1rem 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    max-width: 1000px;
+    width: 100%;
+    font-size: 0.8rem;
+}
+
+.footer-block {
+    color: var(--white-color);
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    margin: 0.5rem 1rem;
+}
+
+.footer-field {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+
+.footer-text {
+    text-align: justify;
+}
+
+nav {
+    display: flex;
+    gap: 1rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+
+.icon-img {
+    margin: 0.5rem 1rem;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.icon-img:hover {
+    transform: scale(1.2)
+}
+
+button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+}
+
+button:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,72 @@
+.timetable {
+    width: 650px;
+    border-collapse: collapse;
+    text-align: center;
+    margin-bottom: 20px;
+    border: 1px solid var(--light-black-color)
+}
+.timetable td {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--light-black-color)
+}
+
+.timetable th {
+    width: calc(100% / 14);
+    text-align: center;
+    border: 1px solid var(--light-black-color)
+}
+
+.free {
+    background-color: var(--timetable-free-cell);
+    transition: background-color;
+}
+
+.free:hover {
+    background-color: var(--timetable-free-cell-hover);
+    cursor: pointer;
+}
+
+.busy {
+    background-color: var(--timetable-busy-cell);
+}
+
+.busy:hover {
+    background-color: var(--timetable-busy-cell-hover);
+    cursor: pointer;
+}
+
+.weekend {
+    background-color: var(--timetable-weekend-cell);
+    text-orientation: revert;
+}
+
+.custom-timetable {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0px, 1fr));
+    /*gap: 0.5rem;*/
+    width: 100%;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.custom-timetable-cell {
+     /*padding: 0.1rem;*/
+ }
+
+.custom-timetable-cell-content {
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.custom-timetable-cell-content:hover {
+    background-color: var(--grey-color);
+    cursor: pointer;
+}
+
+.custom-timetable-cell-content-title {
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-align: center;
+ }

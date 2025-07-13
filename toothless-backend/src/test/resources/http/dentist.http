@@ -1,0 +1,165 @@
+# DENTIST API
+
+### ADMIN login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@dentalclinic.com",
+  "password": "AdminPass123!"
+}
+
+> {%
+    client.test("Login as ADMIN - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("admin_auth_token", response.body.accessToken);
+    });
+%}
+
+### DENTIST login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "dentist.kozlova@dentalclinic.com",
+  "password": "DentistPass123!"
+}
+
+> {%
+    client.test("Login as DENTIST - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.accessToken !== null, "Access token should be present");
+        client.global.set("dentist_auth_token", response.body.accessToken);
+        client.global.set("dentist_id", response.body.userId);
+    });
+%}
+
+
+### Get all dentists (page)
+GET http://localhost:8080/api/v1/dentists?page=0&size=10
+Accept: application/json
+
+> {%
+    client.test("Get all dentists - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.content !== null, "Should return list of dentists");
+    });
+%}
+
+
+### Get dentist by ID (success)
+GET http://localhost:8080/api/v1/dentists/f6a7b8c9-d0e1-2345-6789-0abcdef12345
+Accept: application/json
+
+> {%
+    client.test("Get dentist by ID - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.dentistId !== null, "Dentist ID should be present");
+        client.assert(response.body.firstName !== null, "First name should be present");
+        client.assert(response.body.specialization !== null, "Specialization should be present");
+    });
+%}
+
+### Get dentist by ID (not found)
+GET http://localhost:8080/api/v1/dentists/00000000-0000-0000-0000-000000000111
+Accept: application/json
+
+> {%
+    client.test("Get dentist by ID - not found", function() {
+        client.assert(response.status === 404, "Response status should be 404 for non-existent dentist");
+    });
+%}
+
+### Get dentists demo for main page
+GET http://localhost:8080/api/v1/dentists/demo
+Accept: application/json
+
+> {%
+    client.test("Get dentists demo - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of dentists");
+        client.assert(response.body.length > 0, "Should return at least one dentist");
+    });
+%}
+
+### Get dentists by procedure ID
+GET http://localhost:8080/api/v1/dentists/procedure/b7ffbc99-9c0b-4ef8-bb6d-6bb9bd380a18
+Accept: application/json
+
+> {%
+    client.test("Get dentists by procedure ID - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of dentists");
+    });
+%}
+
+### Get all specializations
+GET http://localhost:8080/api/v1/dentists/specializations
+Accept: application/json
+
+> {%
+    client.test("Get all specializations - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(Array.isArray(response.body), "Should return array of specializations");
+        client.assert(response.body.length > 0, "Should return at least one specialization");
+    });
+%}
+
+### Update dentist profile info
+PUT http://localhost:8080/api/v1/profile/dentist
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{dentist_auth_token}}
+
+{
+  "specializationId": "cc99bc99-9c0b-4ef8-bb6d-6bb9bd380a19",
+  "experience": 5,
+  "education": "Moscow State Medical University",
+  "about": "Specializes in pediatric dentistry"
+}
+
+> {%
+    client.test("Update dentist profile - success", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.isSuccess === true, "Update should be successful");
+    });
+%}
+
+### Update dentist profile info (invalid)
+PUT http://localhost:8080/api/v1/profile/dentist
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{dentist_auth_token}}
+
+{
+  "specializationId": "cc99bc99-9c0b-4ef8-bb6d-6bb9bd380a20",
+  "experience": -1,
+  "education": "S",
+  "about": ""
+}
+
+> {%
+    client.test("Update dentist profile - validation errors", function() {
+        client.assert(response.status === 400, "Response status should be 400 for validation errors");
+    });
+%}
+
+### Update dentist profile info (forbidden)
+PUT http://localhost:8080/api/v1/profile/dentist
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "specializationId": "550e8400-e29b-41d4-a716-446655440000",
+  "experience": 5,
+  "education": "Moscow State Medical University",
+  "about": "Specializes in pediatric dentistry"
+}
+
+> {%
+    client.test("Update dentist profile - forbidden", function() {
+        client.assert(response.status === 403, "Response status should be 403 for non-dentist");
+    });
+%}

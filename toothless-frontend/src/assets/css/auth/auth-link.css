@@ -1,0 +1,17 @@
+.auth-link {
+    display: block;
+    text-align: center;
+    margin: 1rem;
+    color: var(--light-primary-color);
+    text-decoration: none;
+    transition:
+            color 0.3s ease,
+            transform 0.3s ease-in,
+            transform 0.1s ease-out;
+}
+
+.auth-link:hover {
+    color: var(--dark-primary-color);
+    text-decoration: none;
+    transform: scale(1.05);
+}

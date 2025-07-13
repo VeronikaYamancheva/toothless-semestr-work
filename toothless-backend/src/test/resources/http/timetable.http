@@ -1,0 +1,35 @@
+# TIMETABLE API
+
+### Get timetable for existing dentist
+GET http://localhost:8080/api/v1/timetable/550e8400-e29b-41d4-a716-446655440000
+Accept: application/json
+
+> {%
+    client.test("Get timetable for existing dentist - success", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.days !== null, "Days array should be present");
+
+        // Проверяем структуру ответа
+        if (response.body.days.length > 0) {
+            const firstDay = response.body.days[0];
+            client.assert(firstDay.date !== null, "Day date should be present");
+            client.assert(firstDay.dayType !== null, "Day type should be present");
+
+            if (firstDay.dayType === "WORKDAY") {
+                client.assert(firstDay.workDayResponse !== null, "Work day details should be present");
+                client.assert(firstDay.workDayResponse.timeSlots !== null, "Time slots should be present");
+
+                if (firstDay.workDayResponse.timeSlots.length > 0) {
+                    const firstSlot = firstDay.workDayResponse.timeSlots[0];
+                    client.assert(firstSlot.beginTime !== null, "Slot begin time should be present");
+                    client.assert(firstSlot.endTime !== null, "Slot end time should be present");
+                }
+            } else if (firstDay.dayType === "HOLIDAY") {
+                client.assert(firstDay.holidayResponse !== null, "Holiday details should be present");
+                client.assert(firstDay.holidayResponse.name !== null, "Holiday name should be present");
+            }
+        }
+
+        client.log("Received timetable with " + response.body.days.length + " days");
+    });
+%}
