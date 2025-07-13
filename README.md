@@ -23,6 +23,8 @@
 - CLIENT - записывается на прием, пишет комментарии
 - DENTIST - заполнение общедоступной информации о себе в профиле
 
+![Скрины проекта](https://github.com/VeronikaYamancheva/toothless-semestr-work/raw/main/toothless_photo.jpg)
+
 # Требования к семестровой работе
 
 ## Обязательные требования
